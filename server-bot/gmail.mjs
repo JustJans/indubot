@@ -101,7 +101,7 @@ async function get(path, params, token, fetchImpl = fetch) {
 }
 
 // ➤ The ids of the messages matching a Gmail search query (the same syntax you type in
-// ➤ Gmail's own search box, e.g. 'label:Argus newer_than:30d'). IT FOLLOWS THE PAGES:
+// ➤ Gmail's own search box, e.g. 'label:Indubot newer_than:30d'). IT FOLLOWS THE PAGES:
 // ➤ Gmail hands back at most 500 ids at a time plus a token for the next page. The search
 // ➤ window starts at your OLDEST application and only ever gets longer, and Gmail answers
 // ➤ newest-first, so without the pages the oldest replies would drop off the end and those

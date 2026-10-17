@@ -104,7 +104,7 @@ live adverts checked on 2026-09-03, 28 reached their page and 7 fell in these fo
 cases. The Adzuna link works in all of them; it is one click longer.
 
 ### The Council has no decision power
-`server-bot/argus-council/judge-shadow.mjs`. (`portals.yml` → `council.enabled` only
+`server-bot/indubot-council/judge-shadow.mjs`. (`portals.yml` → `council.enabled` only
 decides whether the judges RUN at all; it is not a switch for their authority.)
 
 Their verdict is computed and written to the journal, and nothing else reads it

@@ -10,7 +10,7 @@
 // ➤ ═══════════════════════════════════════════════════════════════════════
 
 import { claudeErrorKind, claudeErrorMessage } from './claude-cli.mjs';
-import { parseVerdict } from './argus-council/judges.mjs';
+import { parseVerdict } from './indubot-council/judges.mjs';
 import { parseLetter, coverFileBase, resolveCoverBase } from './cover-letter.mjs';
 import { writeFileAtomic, tempNameFor, withFileLock } from './fs-atomic.mjs';
 import { classifyLiveness } from './liveness-core.mjs';
@@ -122,7 +122,7 @@ const { ok, eq, done } = harness('robustness');
 
 // ── 5) Atomic writes must not collide between processes ───────────────────
 {
-  const dir = join(tmpdir(), `argus-test-${process.pid}`);
+  const dir = join(tmpdir(), `indubot-test-${process.pid}`);
   const file = join(dir, 'pipeline.md');
   rmSync(dir, { recursive: true, force: true });   // clean slate
   mkdirSync(dir, { recursive: true });
@@ -181,7 +181,7 @@ const { ok, eq, done } = harness('robustness');
 // ➤ out of 1600. These tests watch the MECHANISM, because a lock that quietly
 // ➤ stopped locking would still pass every test about the file's contents.
 {
-  const dir = join(tmpdir(), `argus-lock-${process.pid}`);
+  const dir = join(tmpdir(), `indubot-lock-${process.pid}`);
   const file = join(dir, 'pipeline.md');
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
@@ -332,7 +332,7 @@ const { ok, eq, done } = harness('robustness');
 // ➤ Answering "no 412" from an older message would then hit the wrong one
 // ➤ (audit 2026-07-31). It now also reads the records that only ever grow.
 {
-  const dir = join(tmpdir(), `argus-ids-${process.pid}`);
+  const dir = join(tmpdir(), `indubot-ids-${process.pid}`);
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
   const counter = join(dir, 'last-id.json');
@@ -670,7 +670,7 @@ const { ok, eq, done } = harness('robustness');
 // ➤ Answering "no 412" from an older message would then hit the wrong one
 // ➤ (audit 2026-07-31). It now also reads the records that only ever grow.
 {
-  const dir = join(tmpdir(), `argus-ids-${process.pid}`);
+  const dir = join(tmpdir(), `indubot-ids-${process.pid}`);
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
   const counter = join(dir, 'last-id.json');
@@ -1039,7 +1039,7 @@ const { ok, eq, done } = harness('robustness');
   // ➤ THE DELETE ITSELF, on a file of our own. It matches the trimmed line
   // ➤ exactly, which is the safe way round: a line you edited in the meantime
   // ➤ stops matching and survives instead of being removed by accident.
-  const dir = join(tmpdir(), `argus-hk-${process.pid}`);
+  const dir = join(tmpdir(), `indubot-hk-${process.pid}`);
   mkdirSync(dir, { recursive: true });
   const p = join(dir, 'pipeline.md');
   const before = ['## Pending', '- [ ] a | Acme | Engineer | #1', '- [ ] b | Beta | Engineer | #2', '- [x] c | Gamma | Engineer | #3', ''];
@@ -1095,7 +1095,7 @@ const { ok, eq, done } = harness('robustness');
   // ➤ (Audit 2026-07-27: this block used to re-implement the parser inline and
   // ➤ assert against its own copy — it stayed green no matter what the real
   // ➤ module did. Now it imports the real one and never touches your data.)
-  const dir = join(tmpdir(), `argus-list-${process.pid}`);
+  const dir = join(tmpdir(), `indubot-list-${process.pid}`);
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(join(dir, 'data'), { recursive: true });
   mkdirSync(join(dir, 'server-bot'), { recursive: true });
@@ -1501,7 +1501,7 @@ const { ok, eq, done } = harness('robustness');
 
 // ── A lock from the future, and a wait that does not burn the CPU ───────
 {
-  const dir = join(tmpdir(), `argus-lock-future-${process.pid}`);
+  const dir = join(tmpdir(), `indubot-lock-future-${process.pid}`);
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
   const file = join(dir, 'pipeline.md');

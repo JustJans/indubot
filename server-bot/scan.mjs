@@ -58,7 +58,7 @@ import { landLinkFrom, resolveRoot } from './root-link.mjs';
 
 const parseYaml = yaml.load;
 
-// ── Paths (argus root = parent of server-bot/) ─────────────────
+// ── Paths (indubot root = parent of server-bot/) ─────────────────
 // ➤ Every path the scanner uses — configuration, offer list, history, last-scan state —
 // ➤ recorded once, so the rest of the program never repeats a path by hand.
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
@@ -1693,7 +1693,7 @@ function printSummary(s) {
 }
 
 // ➤ ── SAY WHEN THE RUN DID NOTHING AT ALL ────────────────────────────────
-// ➤ Argus's normal failure is to find nothing, which looks exactly like a quiet week: no
+// ➤ Indubot's normal failure is to find nothing, which looks exactly like a quiet week: no
 // ➤ network, a config that selects no sources, or sources none of which answered all
 // ➤ produce a clean exit and silence. NOT "everything errored" — "nothing answered": a
 // ➤ source switched on but never reached raises no error (a missing Adzuna key is reported
@@ -1720,12 +1720,12 @@ async function alarmIfNothingRan(s) {
   }
   // ➤ And say it where you would actually see it, not only in a log file nobody
   // ➤ opens. Once per run, and never on a dry run.
-  if (verdict && !s.dryRun && !process.env.ARGUS_SKIP_LIST_REFRESH) {
+  if (verdict && !s.dryRun && !process.env.INDUBOT_SKIP_LIST_REFRESH) {
     try {
       const { sendTelegram } = await import(new URL('./notify.mjs', import.meta.url));
       await sendTelegram(verdict === 'nothing-to-scan'
-        ? 'Argus searched nothing this run: no employer, aggregator or LinkedIn is switched on. Nothing will arrive until that is fixed.'
-        : `Argus could not reach a single source this run (${s.errors.length} error(s)). That is a network or configuration problem, not a quiet week.`);
+        ? 'Indubot searched nothing this run: no employer, aggregator or LinkedIn is switched on. Nothing will arrive until that is fixed.'
+        : `Indubot could not reach a single source this run (${s.errors.length} error(s)). That is a network or configuration problem, not a quiet week.`);
     } catch { /* if Telegram is down too, the log above is what is left */ }
   }
 }
@@ -2237,14 +2237,14 @@ async function main() {
     // ➤ There is NO separate "new offers" message: the ONLY Telegram message is the single
     // ➤ live list, which deletes its previous version and re-posts ALL pending offers, and
     // ➤ alert:true makes that repost audible. EXCEPTION: launched by the listener with
-    // ➤ "search" (ARGUS_SKIP_LIST_REFRESH=1) it does NOT refresh here — the listener refreshes
+    // ➤ "search" (INDUBOT_SKIP_LIST_REFRESH=1) it does NOT refresh here — the listener refreshes
     // ➤ AFTER "Search finished" so the list ends at the bottom. It must SAY WHY nothing was
     // ➤ sent: "off" is what an unconfigured bot reports, and a quiet run must not read like a
     // ➤ broken setup.
     if (!dryRun && newOffers.length > 0) {
       appendToPipeline(newOffers);
       appendToScanHistory(newOffers, date);
-      if (!process.env.ARGUS_SKIP_LIST_REFRESH) {
+      if (!process.env.INDUBOT_SKIP_LIST_REFRESH) {
         // ➤ THE LIST WAITS FOR THE COUNCIL. An alert sent the moment the offers land shows the
         // ➤ newest offer with no [YES]/[NO] on it, the verdicts arriving by a silent replacement
         // ➤ minutes later. With the Council on, the new offers are judged FIRST and the one
@@ -2255,7 +2255,7 @@ async function main() {
           const { execFile } = await import('child_process');
           await new Promise(resolve => {
             execFile(process.execPath,
-              [join(SCRIPT_DIR, 'argus-council', 'judge-shadow.mjs'), '--pending-only', '--no-refresh'],
+              [join(SCRIPT_DIR, 'indubot-council', 'judge-shadow.mjs'), '--pending-only', '--no-refresh'],
               { cwd: ROOT, timeout: 12 * 60 * 1000, maxBuffer: 4 * 1024 * 1024 },
               (err, stdout) => {
                 const tail = String(stdout || '').trim().split('\n').pop() || 'no output';

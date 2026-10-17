@@ -9,7 +9,7 @@
 // ➤ ═══════════════════════════════════════════════════════════════════════
 
 /**
- * notify.mjs — Telegram notifier for argus.
+ * notify.mjs — Telegram notifier for indubot.
  *
  * Sends new offers to the user's Telegram when the scanner finds them.
  * Zero dependencies (Telegram Bot API over plain HTTPS).
@@ -44,10 +44,10 @@ const COUNTRIES_PATH = join(SCRIPT_DIR, 'countries.yml');
 const ROOT = dirname(SCRIPT_DIR);
 const PORTALS_PATH = join(ROOT, 'portals.yml');
 const JUDGE_JOURNAL_PATH = join(ROOT, 'data', 'judge-shadow.jsonl');
-// ➤ The Telegram host, overridable for testing: ARGUS_TG_API points a local mock in its
+// ➤ The Telegram host, overridable for testing: INDUBOT_TG_API points a local mock in its
 // ➤ place so the whole setup conversation can be replayed end-to-end with no account (the
 // ➤ baseApiUrl pattern every Telegram-bot test harness uses). Never set in production.
-export const TG_API = process.env.ARGUS_TG_API || 'https://api.telegram.org';
+export const TG_API = process.env.INDUBOT_TG_API || 'https://api.telegram.org';
 
 // ➤ How much text goes in one message before a new one begins. TELEGRAM REFUSES ANYTHING
 // ➤ OVER 4096 CHARACTERS — no list at all, the failure is total — and the count is of

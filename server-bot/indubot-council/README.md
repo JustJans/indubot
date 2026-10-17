@@ -2,7 +2,7 @@
 
 ## What it is
 
-A second opinion on what Argus (the job-search bot) decides. Three AI judges
+A second opinion on what Indubot (the job-search bot) decides. Three AI judges
 read the **body** of each offer —not just the title, as the automatic filter
 does— and vote on whether it should be shown to the user or not. The Council's
 verdict is by **majority, 2 of 3**.
@@ -63,8 +63,8 @@ As long as `enabled` is `false` (or the block is missing), the harness exits wit
 From the project root:
 
 ```bash
-node server-bot/argus-council/judge-shadow.mjs            # ➤ judges presented offers + the sample
-node server-bot/argus-council/judge-shadow.mjs --limit 3  # ➤ only the first 3 (test)
+node server-bot/indubot-council/judge-shadow.mjs            # ➤ judges presented offers + the sample
+node server-bot/indubot-council/judge-shadow.mjs --limit 3  # ➤ only the first 3 (test)
 ```
 
 It needs the same AI CLI the cover letter uses: the Claude token
@@ -76,7 +76,7 @@ model, or on `ai.codex_model` if you name one. Without it the judges return a nu
 Weeks later, to fill in what you actually decided and measure the agreement:
 
 ```bash
-node server-bot/argus-council/reconcile.mjs
+node server-bot/indubot-council/reconcile.mjs
 ```
 
 It cross-references `judge-shadow.jsonl` with the submitted applications
@@ -85,12 +85,12 @@ It cross-references `judge-shadow.jsonl` with the submitted applications
 
 ## Scheduling
 
-It is meant to be **chained to the scan** on the same cron line: first Argus runs
+It is meant to be **chained to the scan** on the same cron line: first Indubot runs
 (`scan.mjs`, which filters and sends the offers to Telegram itself) and, right
 after, the Council (`judge-shadow.mjs` with `flock`), which reads the
 freshly written `pipeline.md` and judges the queue of unjudged offers. This way
-the Council (Argus Plus) is an add-on that starts right after Argus, without
-hijacking its sending: if it's turned off (`council.enabled:false`), Argus works the same.
+the Council (Indubot Plus) is an add-on that starts right after Indubot, without
+hijacking its sending: if it's turned off (`council.enabled:false`), Indubot works the same.
 
 ## Give it two weeks before judging it
 

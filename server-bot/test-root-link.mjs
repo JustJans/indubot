@@ -133,7 +133,7 @@ const walk = (n, title) => resolveRoot(`https://www.adzuna.${n}`, { get, title }
 
 // ── The "via" column of the history ────────────────────────────────────
 {
-  const dir = join(tmpdir(), `argus-root-link-${process.pid}`);
+  const dir = join(tmpdir(), `indubot-root-link-${process.pid}`);
   rmSync(dir, { recursive: true, force: true }); mkdirSync(dir, { recursive: true });
   const p = join(dir, 'scan-history.tsv');
   writeFileSync(p, [

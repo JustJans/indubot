@@ -7,7 +7,7 @@ seen here instead of by a real user. No account, no phone, no VM.
 How the ecosystem does this: a **mock Telegram server** (this folder's
 `mock-telegram.mjs`, modelled on
 [telegram-test-api](https://github.com/jehy/telegram-test-api)) that the bot
-talks to via the `ARGUS_TG_API` base-URL override — the same `baseApiUrl`
+talks to via the `INDUBOT_TG_API` base-URL override — the same `baseApiUrl`
 pattern those harnesses use. The alternative, Telegram's official **test DC**,
 needs a real phone to register even there, so the mock is the account-free route.
 
@@ -36,9 +36,9 @@ system account, so the schedule it writes lands in that account's crontab and
 never yours:
 
 ```bash
-sudo useradd -m argustest
-sudo -u argustest bash setup/test/fresh-install-linux.sh
-sudo userdel -r argustest        # afterwards
+sudo useradd -m indubottest
+sudo -u indubottest bash setup/test/fresh-install-linux.sh
+sudo userdel -r indubottest        # afterwards
 ```
 
 It prints the console and the chat side by side and then the state the machine

@@ -6,7 +6,7 @@
 // ➤ the subject, the sender or a line of the body; if this file ever leaks it says "an
 // ➤ application was rejected on the 4th", nothing more. It can do nothing to your mailbox
 // ➤ (see gmail.mjs) and reads only back to your oldest recorded application. RUN: node
-// ➤ server-bot/argus-mail/listen.mjs [--dry-run]
+// ➤ server-bot/indubot-mail/listen.mjs [--dry-run]
 // ➤ ═══════════════════════════════════════════════════════════════════════
 
 import { readFileSync, existsSync } from 'fs';
@@ -99,7 +99,7 @@ async function main() {
   if (ids.length >= PAGE) {
     console.error(`WARNING: the mailbox has more than ${PAGE} messages in the window — the oldest`);
     console.error('were NOT read, and their applications may wrongly show as "no reply".');
-    console.error('Raise PAGE in server-bot/argus-mail/listen.mjs if this keeps happening.');
+    console.error('Raise PAGE in server-bot/indubot-mail/listen.mjs if this keeps happening.');
   }
 
   // ➤ A few at a time. This is a mailbox, not a load test, and the whole job

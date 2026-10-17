@@ -2,12 +2,12 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/readme/wordmark-dark.svg">
-  <img src="docs/readme/wordmark-light.svg" width="640" alt="ARGUS, a personal, automated job searcher, driven from Telegram">
+  <img src="docs/readme/wordmark-light.svg" width="640" alt="INDUBOT, a personal, automated job searcher, driven from Telegram">
 </picture>
 
-[![tests](https://img.shields.io/github/actions/workflow/status/JustJans/argus/tests.yml?branch=master&style=flat-square&label=tests&labelColor=201e1d)](https://github.com/JustJans/argus/actions/workflows/tests.yml)
-[![CodeQL](https://img.shields.io/github/actions/workflow/status/JustJans/argus/codeql.yml?branch=master&style=flat-square&label=codeql&labelColor=201e1d)](https://github.com/JustJans/argus/actions/workflows/codeql.yml)
-[![release](https://img.shields.io/github/v/release/JustJans/argus?style=flat-square&labelColor=201e1d&color=ec3013)](https://github.com/JustJans/argus/releases)
+[![tests](https://img.shields.io/github/actions/workflow/status/JustJans/indubot/tests.yml?branch=master&style=flat-square&label=tests&labelColor=201e1d)](https://github.com/JustJans/indubot/actions/workflows/tests.yml)
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/JustJans/indubot/codeql.yml?branch=master&style=flat-square&label=codeql&labelColor=201e1d)](https://github.com/JustJans/indubot/actions/workflows/codeql.yml)
+[![release](https://img.shields.io/github/v/release/JustJans/indubot?style=flat-square&labelColor=201e1d&color=ec3013)](https://github.com/JustJans/indubot/releases)
 ![node](https://img.shields.io/badge/node-%E2%89%A5%2020-7d7979?style=flat-square&labelColor=201e1d)
 ![platforms](https://img.shields.io/badge/runs%20on-Windows%20·%20macOS%20·%20Linux-7d7979?style=flat-square&labelColor=201e1d)
 
@@ -33,18 +33,18 @@ Everything personal (roles, countries, languages, deal-breakers, CV) lives in `c
 
 ## Install
 
-One line. It downloads the latest release into `~/argus`, installs what is missing, registers the schedule, asks for your bot token and hands you a `t.me` link: **one tap on START and the bot begins your profile questions**. Re-running it later updates (or repairs) without touching your data.
+One line. It downloads the latest release into `~/indubot`, installs what is missing, registers the schedule, asks for your bot token and hands you a `t.me` link: **one tap on START and the bot begins your profile questions**. Re-running it later updates (or repairs) without touching your data.
 
 **Windows** (PowerShell):
 
 ```powershell
-irm https://raw.githubusercontent.com/JustJans/argus/master/install.ps1 | iex
+irm https://raw.githubusercontent.com/JustJans/indubot/master/install.ps1 | iex
 ```
 
 **macOS / Linux** (Terminal):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/JustJans/argus/master/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/JustJans/indubot/master/install.sh | bash
 ```
 
 Required: **Node.js 20+** and a **Telegram bot token** ([@BotFather](https://t.me/BotFather)). No server: a laptop is fine; it simply searches while the machine is awake.
@@ -65,7 +65,7 @@ Required: **Node.js 20+** and a **Telegram bot token** ([@BotFather](https://t.m
 <summary><b>Manual install</b></summary>
 <br>
 
-**Prefer to do it by hand?** Open the [Releases page](https://github.com/JustJans/argus/releases) and download the latest **Source code (zip)**, the tested snapshot; the green Code button gives you master, which may be mid-work. Unzip it anywhere sensible (on macOS avoid Desktop/Documents/Downloads: cron cannot read them) and run the setup script for your system. Git is only a way of downloading; Argus never needs it to run.
+**Prefer to do it by hand?** Open the [Releases page](https://github.com/JustJans/indubot/releases) and download the latest **Source code (zip)**, the tested snapshot; the green Code button gives you master, which may be mid-work. Unzip it anywhere sensible (on macOS avoid Desktop/Documents/Downloads: cron cannot read them) and run the setup script for your system. Git is only a way of downloading; Indubot never needs it to run.
 
 **Going the ZIP way on Windows?** First take the internet mark off the ZIP: right-click it, **Properties**, tick **Unblock**, OK; then extract. (Skip that and Windows warns about a missing digital signature on the first double-click; that is what it says about ANY free program not signed with a paid publisher certificate. The one-line installer avoids all of this.) Then double-click **`setup\setup-windows.bat`**: it installs Node.js by itself if it is missing (via winget), installs the dependencies, walks you through the Telegram token, and creates the four scheduled tasks. On macOS and Linux, `bash setup/setup-linux-mac.sh`: same steps, cron instead of Task Scheduler.
 
@@ -90,10 +90,10 @@ node server-bot/notify.mjs --setup
 Run it on a schedule (the bot does not schedule itself), **before** `/start`: the listener line is the one that receives your Telegram commands. `setup/setup-linux-mac.sh` offers to install all four for you:
 
 ```cron
-*    * * * * cd /path/to/argus && /usr/bin/flock -n /tmp/argus-listener.lock /usr/bin/node server-bot/telegram-listener.mjs >> server-bot/listener.log 2>&1
-0 */2 * * * cd /path/to/argus && /usr/bin/flock -n /tmp/argus-scan.lock /usr/bin/node server-bot/scan.mjs >> server-bot/scan.log 2>&1
-30 7  * * * cd /path/to/argus && /usr/bin/node server-bot/housekeep.mjs --liveness-only >> server-bot/scan.log 2>&1
-0 9   * * 0 cd /path/to/argus && /usr/bin/node server-bot/housekeep.mjs >> server-bot/scan.log 2>&1
+*    * * * * cd /path/to/indubot && /usr/bin/flock -n /tmp/indubot-listener.lock /usr/bin/node server-bot/telegram-listener.mjs >> server-bot/listener.log 2>&1
+0 */2 * * * cd /path/to/indubot && /usr/bin/flock -n /tmp/indubot-scan.lock /usr/bin/node server-bot/scan.mjs >> server-bot/scan.log 2>&1
+30 7  * * * cd /path/to/indubot && /usr/bin/node server-bot/housekeep.mjs --liveness-only >> server-bot/scan.log 2>&1
+0 9   * * 0 cd /path/to/indubot && /usr/bin/node server-bot/housekeep.mjs >> server-bot/scan.log 2>&1
 ```
 
 The minute line is a watchdog, not the work itself: the listener it starts stays resident and long-polls Telegram, so commands answer in about a second. While it lives, `flock` makes every later tick a no-op; on macOS, which ships no flock, the listener's own heartbeat file does the same job.
@@ -101,21 +101,21 @@ The minute line is a watchdog, not the work itself: the listener it starts stays
 On **Windows**, the same four go into Task Scheduler: `setup\setup-windows.bat` creates them for you (through `setup\run-hidden.vbs`, so no console window flashes). Doing it by hand instead, the shape is:
 
 ```powershell
-schtasks /create /tn "Argus listener" /sc minute /mo 1 /tr '"C:\Program Files\nodejs\node.exe" "C:\path\to\argus\server-bot\telegram-listener.mjs"'
-schtasks /create /tn "Argus scan"     /sc hourly /mo 2 /tr '"C:\Program Files\nodejs\node.exe" "C:\path\to\argus\server-bot\scan.mjs"'
-schtasks /create /tn "Argus links"    /sc daily /st 07:30 /tr '"C:\Program Files\nodejs\node.exe" "C:\path\to\argus\server-bot\housekeep.mjs" --liveness-only'
-schtasks /create /tn "Argus cleanup"  /sc weekly /d SUN /st 09:00 /tr '"C:\Program Files\nodejs\node.exe" "C:\path\to\argus\server-bot\housekeep.mjs"'
+schtasks /create /tn "Indubot listener" /sc minute /mo 1 /tr '"C:\Program Files\nodejs\node.exe" "C:\path\to\indubot\server-bot\telegram-listener.mjs"'
+schtasks /create /tn "Indubot scan"     /sc hourly /mo 2 /tr '"C:\Program Files\nodejs\node.exe" "C:\path\to\indubot\server-bot\scan.mjs"'
+schtasks /create /tn "Indubot links"    /sc daily /st 07:30 /tr '"C:\Program Files\nodejs\node.exe" "C:\path\to\indubot\server-bot\housekeep.mjs" --liveness-only'
+schtasks /create /tn "Indubot cleanup"  /sc weekly /d SUN /st 09:00 /tr '"C:\Program Files\nodejs\node.exe" "C:\path\to\indubot\server-bot\housekeep.mjs"'
 ```
 
 No administrator rights needed. Windows only runs them while the machine is awake, which is fine; a laptop you close simply searches when you open it.
 
-On Windows, Argus behaves like a normal installed program: it appears in **Settings → Installed apps** with a working Uninstall button, and its processes show in Task Manager as **argus.exe**; the setup copies your Node runtime under the product's name (the copy keeps Node's valid signature), so you can always tell at a glance that it is Argus running and not some anonymous `node.exe`.
+On Windows, Indubot behaves like a normal installed program: it appears in **Settings → Installed apps** with a working Uninstall button, and its processes show in Task Manager as **indubot.exe**; the setup copies your Node runtime under the product's name (the copy keeps Node's valid signature), so you can always tell at a glance that it is Indubot running and not some anonymous `node.exe`.
 
 </details>
 
 ## First run
 
-Send **`/start`** to the bot. It walks you through a short questionnaire (CV + a few questions, some with buttons) and writes `config/profile.yml` + `cv.md` for you; `settings` re-opens any question later. Until you do it, Argus searches with the marine/offshore example, so the first list will not be yours. That is expected, not a fault.
+Send **`/start`** to the bot. It walks you through a short questionnaire (CV + a few questions, some with buttons) and writes `config/profile.yml` + `cv.md` for you; `settings` re-opens any question later. Until you do it, Indubot searches with the marine/offshore example, so the first list will not be yours. That is expected, not a fault.
 
 <details>
 <summary><b>Prefer files over chat?</b></summary>
@@ -183,11 +183,11 @@ Two optional subsystems, both measured, neither allowed to decide anything on it
 
 ### The Council: three judges that do not vote
 
-[`server-bot/argus-council/`](server-bot/argus-council/README.md) · Three LLM judges read the **body** of an offer and vote in shadow: **The Good** defaults to showing, **The Bad** hunts the mismatch a title cannot reveal, **The Ugly** reads the actual day-to-day and breaks ties. Their word (`[YES]`, `[MYB]`, `[NO]` — or `[?]` when the page gave them nothing to read) appears next to each offer. Advice, never a decision: no offer is ever kept or dropped because of a judge, and the whole thing ships **off**.
+[`server-bot/indubot-council/`](server-bot/indubot-council/README.md) · Three LLM judges read the **body** of an offer and vote in shadow: **The Good** defaults to showing, **The Bad** hunts the mismatch a title cannot reveal, **The Ugly** reads the actual day-to-day and breaks ties. Their word (`[YES]`, `[MYB]`, `[NO]` — or `[?]` when the page gave them nothing to read) appears next to each offer. Advice, never a decision: no offer is ever kept or dropped because of a judge, and the whole thing ships **off**.
 
 ### Mail: silence counts as an answer
 
-[`server-bot/argus-mail/`](server-bot/argus-mail/README.md) · Reads your inbox once a night (Gmail, **read-only by OAuth scope**), matches replies to the applications you logged, and writes one state per application. `mail` prints it:
+[`server-bot/indubot-mail/`](server-bot/indubot-mail/README.md) · Reads your inbox once a night (Gmail, **read-only by OAuth scope**), matches replies to the applications you logged, and writes one state per application. `mail` prints it:
 
 | | State | Means |
 |---|---|---|
@@ -212,7 +212,7 @@ Two things make this harder than it looks, and both are measured rather than ass
 
 Classification is word lists, not a model: on 500 real messages they found 46 outcomes and 2 false alarms, and when one is wrong you add the phrase and it stays fixed.
 
-**It can only read.** The token is issued for `gmail.readonly`, which Google enforces on their side. There is one function that talks to the mail API and the verb `GET` is written into it rather than passed in; a test reads the file as text and fails if a second verb ever appears. Nothing from a message is ever written to disk. Setting it up needs a Google Cloud OAuth client of your own; [the README in `server-bot/argus-mail/`](server-bot/argus-mail/README.md) walks through it. Without one, the rest of Argus works exactly as before and `mail` simply says so.
+**It can only read.** The token is issued for `gmail.readonly`, which Google enforces on their side. There is one function that talks to the mail API and the verb `GET` is written into it rather than passed in; a test reads the file as text and fails if a second verb ever appears. Nothing from a message is ever written to disk. Setting it up needs a Google Cloud OAuth client of your own; [the README in `server-bot/indubot-mail/`](server-bot/indubot-mail/README.md) walks through it. Without one, the rest of Indubot works exactly as before and `mail` simply says so.
 
 </details>
 
@@ -232,8 +232,8 @@ The engine lives in [`server-bot/`](server-bot/README.md); its README is the ful
 - `onboarding.mjs`: the `/start` setup + `settings` editor.
 - `esco.mjs`: the setup's bridge to the EU's [ESCO](https://esco.ec.europa.eu/) occupation taxonomy: roles and degree areas arrive suggested instead of asked cold.
 - `cover-letter.mjs`: cover letters as PDFs (Claude + Chromium).
-- `argus-council/`: the three shadow judges; prompts can be overridden per user.
-- `gmail.mjs` / `gmail-auth.mjs` / `argus-mail/`: the read-only door to your inbox and the reply-matching.
+- `indubot-council/`: the three shadow judges; prompts can be overridden per user.
+- `gmail.mjs` / `gmail-auth.mjs` / `indubot-mail/`: the read-only door to your inbox and the reply-matching.
 
 Plain Node, four dependencies (`js-yaml`, `playwright`, `pdf-parse`, `html-to-text`), no database, no service to sign up for beyond the portals themselves.
 
@@ -262,7 +262,7 @@ If the bot answers nothing, run the diagnosis (`setup\diagnose-windows.bat` or `
 
 Some behaviour that looks wrong is deliberate, and some of what the bot gets wrong is knowingly left alone. Both are written down, with the reasoning, in [KNOWN-LIMITS.md](KNOWN-LIMITS.md), and the incident behind each rule in the code is kept in [docs/HISTORY.md](docs/HISTORY.md); read it before "fixing" a filter.
 
-**To uninstall:** Windows Settings → Installed apps → Argus → Uninstall (or `setup\uninstall-windows.bat`); on macOS/Linux, `bash setup/uninstall-linux-mac.sh`. Your profile, CV and application history live in the folder and are never deleted for you.
+**To uninstall:** Windows Settings → Installed apps → Indubot → Uninstall (or `setup\uninstall-windows.bat`); on macOS/Linux, `bash setup/uninstall-linux-mac.sh`. Your profile, CV and application history live in the folder and are never deleted for you.
 
 </details>
 
@@ -270,4 +270,3 @@ Some behaviour that looks wrong is deliberate, and some of what the bot gets wro
 
 - **Secrets** (Telegram/Claude tokens, API keys) and **activity data** (offers, applications, feedback) are **not** in the repository.
 - The scan costs **zero AI tokens**: it is HTTP and JSON. Only `cover N` and the optional Council call a model.
-- **Argus** is the hundred-eyed watchman of Greek myth, who never sleeps.

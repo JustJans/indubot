@@ -1,5 +1,5 @@
 // ➤ ═══════════════════════════════════════════════════════════════════════
-// ➤ WHAT IT IS: the single place from which Argus calls Claude on the server. Every caller
+// ➤ WHAT IT IS: the single place from which Indubot calls Claude on the server. Every caller
 // ➤ gets the same launcher, the same path lookup and the same reading of the CLI's own
 // ➤ complaints (spend limit, login, not installed), which count as failures whichever
 // ➤ channel they arrive on.

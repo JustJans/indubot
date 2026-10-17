@@ -1,6 +1,6 @@
 // ➤ ═══════════════════════════════════════════════════════════════════════
 // ➤ WHAT IT IS: the HARNESS of "The Council" — the only file here that runs on its own
-// ➤ (chained after the scan on the same cron line, or by hand). It OBSERVES what Argus
+// ➤ (chained after the scan on the same cron line, or by hand). It OBSERVES what Indubot
 // ➤ already decided and rethinks it with the 3 judges, noting the result in ITS OWN log.
 // ➤ SHADOW: it decides NOTHING and touches no bot file.
 // ➤
@@ -10,7 +10,7 @@
 // ➤ through the Council ONCE); for each new one fetches the body, runs the 3 judges,
 // ➤ computes the verdict (2 of 3) and logs it.
 // ➤
-// ➤ ARCHITECTURE: Argus is the BASE and works alone; the Council is the OPTIONAL layer
+// ➤ ARCHITECTURE: Indubot is the BASE and works alone; the Council is the OPTIONAL layer
 // ➤ that adds an opinion — off (council.enabled:false), nothing changes.
 // ➤
 // ➤ WRITES two files of its own and nothing else: data/judge-shadow.jsonl (one JSON line
@@ -31,7 +31,7 @@ import { runJudge } from './engine.mjs';
 import { councilVote } from './vote.mjs';
 import { withFileLock } from '../fs-atomic.mjs';
 
-// ➤ Paths: council/ → server-bot/ → argus/ (the project root).
+// ➤ Paths: council/ → server-bot/ → indubot/ (the project root).
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const ROOT = dirname(dirname(SCRIPT_DIR));
 const PORTALS_PATH = join(ROOT, 'portals.yml');
@@ -249,7 +249,7 @@ async function main() {
   const pendingOnly = args.includes('--pending-only');
   const noRefresh = args.includes('--no-refresh');
 
-  // ➤ 1) The PRESENTED ones: the pending offers Argus showed (they carry URL and id).
+  // ➤ 1) The PRESENTED ones: the pending offers Indubot showed (they carry URL and id).
   const presented = pendingOffers().map(o => ({ ...o, source: 'pending', botDecision: 'presented' }));
   // ➤ 2) The SAMPLE of dropped ones (by title), if the file exists. The judged
   // ➤ keys go in so the quota is spent on offers the Council has NOT seen yet.

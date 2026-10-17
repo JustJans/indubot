@@ -1,4 +1,4 @@
-' Argus - hidden launcher. Task Scheduler pops a console window for every run
+' Indubot - hidden launcher. Task Scheduler pops a console window for every run
 ' of a console program, and the listener runs EVERY MINUTE: a window flashing
 ' at the user sixty times an hour. Running the command through WScript.Shell
 ' with window style 0 is the ancient, boring cure (a folk pattern older than

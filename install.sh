@@ -1,30 +1,36 @@
 #!/bin/sh
 # ─────────────────────────────────────────────────────────────────────────────
-# Argus — one-line installer for macOS and Linux. From a terminal:
-#   curl -fsSL https://raw.githubusercontent.com/JustJans/argus/master/install.sh | bash
-# Downloads the latest code into ~/argus and hands over to the guided setup.
+# Indubot — one-line installer for macOS and Linux. From a terminal:
+#   curl -fsSL https://raw.githubusercontent.com/JustJans/indubot/master/install.sh | bash
+# Downloads the latest code into ~/indubot and hands over to the guided setup.
 # Re-running it UPDATES the code and never touches your profile, CV or data.
-# (Why ~/argus: macOS keeps cron out of Desktop/Documents/Downloads, so an
+# (Why ~/indubot: macOS keeps cron out of Desktop/Documents/Downloads, so an
 # unzip there works by hand and silently never runs on schedule. A fixed plain
 # folder kills that whole class, and the cron lines never point at a dead copy.)
 # ─────────────────────────────────────────────────────────────────────────────
 set -eu
-DEST="${ARGUS_DEST:-$HOME/argus}"
-printf '\nInstalling Argus into %s\n' "$DEST"
-TMP="$(mktemp -d 2>/dev/null || echo "/tmp/argus-install.$$")"
+DEST="${INDUBOT_DEST:-$HOME/indubot}"
+# ➤ Indubot was called Argus until October 2026, and lived in ~/argus. An install
+# ➤ found there is updated where it is, with its profile, CV, data and token,
+# ➤ instead of starting a second, empty one next to it that would answer the same bot.
+if [ -z "${INDUBOT_DEST:-}" ] && [ ! -e "$DEST" ] && [ -f "$HOME/argus/server-bot/telegram-listener.mjs" ]; then
+  DEST="$HOME/argus"
+fi
+printf '\nInstalling Indubot into %s\n' "$DEST"
+TMP="$(mktemp -d 2>/dev/null || echo "/tmp/indubot-install.$$")"
 mkdir -p "$TMP"
 # ➤ Install the LATEST RELEASE, not whatever master holds this minute: a
 # ➤ half-landed push must never reach a user. The GitHub API names the tag;
 # ➤ if it cannot be reached, master is still better than no install at all.
-# ➤ ARGUS_REF overrides both (the test harness pins "refs/heads/master").
-REF="${ARGUS_REF:-}"
+# ➤ INDUBOT_REF overrides both (the test harness pins "refs/heads/master").
+REF="${INDUBOT_REF:-}"
 if [ -z "$REF" ]; then
-  TAG="$(curl -fsSL --max-time 10 https://api.github.com/repos/JustJans/argus/releases/latest 2>/dev/null | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p' | head -1)"
+  TAG="$(curl -fsSL --max-time 10 https://api.github.com/repos/JustJans/indubot/releases/latest 2>/dev/null | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p' | head -1)"
   if [ -n "$TAG" ]; then REF="refs/tags/$TAG"; echo "  version: $TAG (latest release)"
   else REF="refs/heads/master"; echo "  release lookup failed - installing master"; fi
 fi
-curl -fsSL "https://github.com/JustJans/argus/archive/$REF.tar.gz" | tar -xz -C "$TMP"
-# ➤ The extracted folder is named after the ref (argus-master, argus-1.9.0):
+curl -fsSL "https://github.com/JustJans/indubot/archive/$REF.tar.gz" | tar -xz -C "$TMP"
+# ➤ The extracted folder is named after the ref (indubot-master, indubot-1.9.0):
 # ➤ take the one folder that is there instead of guessing the suffix.
 SRC="$(find "$TMP" -mindepth 1 -maxdepth 1 -type d | head -n 1)"
 # ➤ An UPDATE must never clobber what the user built: the profile, the CV and
@@ -41,8 +47,8 @@ mkdir -p "$DEST"
 cp -R "$SRC/." "$DEST/"
 rm -rf "$TMP"
 echo "  OK  latest code in place (your profile, CV and data untouched)"
-if [ "${ARGUS_NO_SETUP:-}" = "1" ]; then
-  echo "ARGUS_NO_SETUP is set - skipping the setup."
+if [ "${INDUBOT_NO_SETUP:-}" = "1" ]; then
+  echo "INDUBOT_NO_SETUP is set - skipping the setup."
   exit 0
 fi
 cd "$DEST"

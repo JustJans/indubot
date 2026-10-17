@@ -102,7 +102,7 @@ async function main() {
       // ➤ one line and the alternative is echoing attacker-shaped text.
       const escHtml = t => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
       res.end(got
-        ? '<h2>Argus is authorised.</h2><p>You can close this tab and go back to the terminal.</p>'
+        ? '<h2>Indubot is authorised.</h2><p>You can close this tab and go back to the terminal.</p>'
         : `<h2>Authorisation failed</h2><p>${escHtml(err || 'no code returned')}</p>`,
       () => {
         clearTimeout(timer);
@@ -123,7 +123,7 @@ async function main() {
     console.log('It asks for ONE permission: "View your email messages and settings".');
     console.log('If you are shown anything else, close the tab and say so.');
     console.log('Google will also warn the app is not verified — expected for a personal');
-    console.log('app: choose Advanced, then "Go to Argus".');
+    console.log('app: choose Advanced, then "Go to Indubot".');
     console.log('\nWaiting for you to approve (5 minutes)...');
   }).catch(e => { try { server.closeAllConnections?.(); server.close(); } catch { /* the server is going down anyway */ } throw e; });
 
