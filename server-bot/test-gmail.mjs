@@ -65,7 +65,7 @@ const { ok, eq, done } = harness('gmail');
     seen.push({ url: String(url), method: opts?.method });
     return { ok: true, status: 200, json: async () => ({ messages: [{ id: 'abc' }], id: 'abc', snippet: 's', payload: { headers: [] } }) };
   };
-  await listMessageIds('label:Argus', { token: 'fake-access-token', fetchImpl: fakeFetch });
+  await listMessageIds('label:Indubot', { token: 'fake-access-token', fetchImpl: fakeFetch });
   await messageSummary('abc', { token: 'fake-access-token', fetchImpl: fakeFetch });
   eq(seen.map(s => s.method), ['GET', 'GET'], 'both mail calls went out as GET');
   ok(seen.every(s => s.url.startsWith('https://gmail.googleapis.com/gmail/v1/users/me')), 'and to the Gmail API only');
@@ -174,7 +174,7 @@ const { ok, eq, done } = harness('gmail');
 // ➤ lands on disk is the KIND of message and its date, never a word of your
 // ➤ mail. If that ever stops being true, this fails.
 {
-  const { buildStatus } = await import('./argus-mail/status.mjs');
+  const { buildStatus } = await import('./indubot-mail/status.mjs');
   const apps = [{ id: 1, company: 'Acme', title: 'Engineer', ts: '2026-07-01T09:00:00Z' }];
   const links = [{
     application: apps[0],

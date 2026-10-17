@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-# Argus — macOS/Linux uninstall. Run: bash setup/uninstall-linux-mac.sh
-# It removes THIS copy's cron lines, which is everything Argus put OUTSIDE its
+# Indubot — macOS/Linux uninstall. Run: bash setup/uninstall-linux-mac.sh
+# It removes THIS copy's cron lines, which is everything Indubot put OUTSIDE its
 # own folder. The folder itself — code, your profile, your CV, your data —
 # stays; delete it by hand if you want everything gone.
 # Written for the bash 3.2 macOS ships: no case inside $(…).
@@ -12,8 +12,8 @@ cd "$(dirname "$0")/.."
 ROOT="$(pwd)"
 ok()   { printf '  OK  %s\n' "$*"; }
 
-printf '\nArgus uninstall — %s\n' "$ROOT"
-echo "  This removes Argus's cron lines (listener, scan, links, cleanup)."
+printf '\nIndubot uninstall — %s\n' "$ROOT"
+echo "  This removes Indubot's cron lines (listener, scan, links, cleanup)."
 echo "  The folder and everything in it stay; delete the folder yourself after."
 printf '  Remove the cron lines? (y/n) '
 read -r ANS
@@ -22,7 +22,7 @@ if [ "$ANS" != "y" ]; then echo "  Nothing was touched."; exit 0; fi
 if ! command -v crontab >/dev/null 2>&1 || ! crontab -l >/dev/null 2>&1; then
   ok "no crontab on this machine — nothing to remove"
 else
-  CRON_TMP="$(mktemp 2>/dev/null || echo "/tmp/argus-cron.$$")"
+  CRON_TMP="$(mktemp 2>/dev/null || echo "/tmp/indubot-cron.$$")"
   # ➤ Both spellings, like the diagnose script: the setup quotes the path since
   # ➤ 2026-08-08, and this filter only knew the bare one — so modern installs
   # ➤ kept their cron lines through an "uninstall".

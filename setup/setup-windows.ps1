@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# Argus - guided setup for Windows. The one-line installer runs this; by hand,
+# Indubot - guided setup for Windows. The one-line installer runs this; by hand,
 # double-click setup-windows.bat next to it (a .ps1 opens Notepad if clicked).
 # THE CONTRACT: the user types the bot token and taps START in Telegram, and
 # nothing else. Running the installer IS the consent, so nothing here asks
@@ -18,9 +18,9 @@ function Ok($msg)   { Write-Host "  OK  $msg" }
 function Warn($msg) { Write-Host "  !   $msg" }
 
 # ➤ The Telegram host, overridable for testing only. Default is the real one.
-$tgApi = if ($env:ARGUS_TG_API) { $env:ARGUS_TG_API } else { 'https://api.telegram.org' }
+$tgApi = if ($env:INDUBOT_TG_API) { $env:INDUBOT_TG_API } else { 'https://api.telegram.org' }
 
-Say "Argus setup"
+Say "Indubot setup"
 
 # -- 1. Node ------------------------------------------------------------------
 # ➤ 20, not 18: playwright (which prints the cover letters) requires it.
@@ -35,7 +35,7 @@ $node = Find-Node
 if (-not $node) {
     $winget = Get-Command winget -ErrorAction SilentlyContinue
     if ($winget) {
-        Say "Installing Node.js LTS (Argus runs on it) - this takes a minute or two."
+        Say "Installing Node.js LTS (Indubot runs on it) - this takes a minute or two."
         Write-Host "  Windows will ask for permission to install it; accept that prompt."
         # ➤ winget narrates in the machine's language, store legalese and all;
         # ➤ its output only shows when the install FAILS.
@@ -69,30 +69,56 @@ if ($nodeSays -notmatch '^\d+(\.\d+)*$') {
     exit 1
 }
 if ([int]($nodeSays -split '\.')[0] -lt 20) {
-    Warn "Node v$nodeSays is too old. Argus needs 20 or newer (playwright, which prints the cover letters, requires it)."
+    Warn "Node v$nodeSays is too old. Indubot needs 20 or newer (playwright, which prints the cover letters, requires it)."
     Read-Host "  Press Enter to close"
     exit 1
 }
 Ok "Node v$nodeSays"
 
+# -- 1a. The old name ---------------------------------------------------------
+# ➤ Indubot was called Argus until October 2026. Its four tasks would keep a
+# ➤ second listener answering the same bot, so they go before the new ones
+# ➤ exist, with the process each left running (the listener outlives its task)
+# ➤ and the old Installed-apps entry. The process is matched by the exact
+# ➤ argus.exe path its own task named, never by a bare name.
+foreach ($old in 'Argus listener', 'Argus scan', 'Argus links', 'Argus cleanup') {
+    $t = Get-ScheduledTask -TaskName $old -ErrorAction SilentlyContinue
+    if (-not $t) { continue }
+    $exe = [regex]::Match((($t.Actions | ForEach-Object { $_.Arguments }) -join ' '), '"([^"]+\.exe)"').Groups[1].Value
+    try { Stop-ScheduledTask -TaskName $old -ErrorAction Stop | Out-Null } catch { }
+    try {
+        Unregister-ScheduledTask -TaskName $old -Confirm:$false -ErrorAction Stop
+        Ok "removed the old '$old' task"
+    } catch { Warn "could not remove the old '$old' task: $($_.Exception.Message)" }
+    if ($exe -and [IO.Path]::GetFileName($exe) -ieq 'argus.exe') {
+        foreach ($proc in Get-Process -ErrorAction SilentlyContinue) {
+            $p = $null
+            try { $p = $proc.Path } catch { }
+            if ($p -and $p -ieq $exe) { try { Stop-Process -Id $proc.Id -Force -ErrorAction Stop } catch { } }
+        }
+    }
+}
+Remove-Item 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Argus' -Recurse -ErrorAction SilentlyContinue
+Remove-Item (Join-Path $root 'argus.exe') -Force -ErrorAction SilentlyContinue
+
 # -- 1b. The app's face -------------------------------------------------------
 # ➤ Task Manager shows the process NAME, and "node.exe" tells the user nothing
 # ➤ — worse, it reads as something foreign eating their CPU. Node copied under
 # ➤ the product's name IS still Node: the Authenticode signature covers the
-# ➤ bytes, not the filename, so it stays valid — and every Argus process (the
+# ➤ bytes, not the filename, so it stays valid — and every Indubot process (the
 # ➤ listener and the children it spawns via process.execPath) then appears in
-# ➤ Task Manager as argus.exe. Refreshed on every run, so a Node upgrade
+# ➤ Task Manager as indubot.exe. Refreshed on every run, so a Node upgrade
 # ➤ reaches the copy the next time the installer or the repair runs.
-$argusExe = Join-Path $root 'argus.exe'
-try { Stop-ScheduledTask -TaskName 'Argus listener' -ErrorAction Stop | Out-Null } catch { }
+$indubotExe = Join-Path $root 'indubot.exe'
+try { Stop-ScheduledTask -TaskName 'Indubot listener' -ErrorAction Stop | Out-Null } catch { }
 try {
-    Copy-Item $node $argusExe -Force -ErrorAction Stop
-    Ok "argus.exe in place (Node wearing the product's name)"
+    Copy-Item $node $indubotExe -Force -ErrorAction Stop
+    Ok "indubot.exe in place (Node wearing the product's name)"
 } catch {
     # ➤ A busy listener can hold the file. Yesterday's copy still works; with
     # ➤ none at all, the schedule falls back to node.exe - unbranded, not broken.
-    if (Test-Path $argusExe) { Ok "argus.exe kept from the previous run (the file is busy right now)" }
-    else { $argusExe = $node; Warn "could not create argus.exe - the tasks will show as node.exe" }
+    if (Test-Path $indubotExe) { Ok "indubot.exe kept from the previous run (the file is busy right now)" }
+    else { $indubotExe = $node; Warn "could not create indubot.exe - the tasks will show as node.exe" }
 }
 
 # -- 2. Dependencies ----------------------------------------------------------
@@ -141,20 +167,20 @@ $vbs = Join-Path $root 'setup\run-hidden.vbs'
 $settings = New-ScheduledTaskSettingsSet -MultipleInstances IgnoreNew -StartWhenAvailable `
     -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
 $mkAction = { param($script, $extra)
-    $arg = "//B //Nologo `"$vbs`" `"$argusExe`" `"$(Join-Path $root $script)`""
+    $arg = "//B //Nologo `"$vbs`" `"$indubotExe`" `"$(Join-Path $root $script)`""
     if ($extra) { $arg = "$arg `"$extra`"" }
     New-ScheduledTaskAction -Execute $wscript -Argument $arg -WorkingDirectory $root
 }
 $forever = New-TimeSpan -Days 3650
 $jobs = @(
-    @{ Name = 'Argus listener'; Script = 'server-bot\telegram-listener.mjs'; Extra = $null
+    @{ Name = 'Indubot listener'; Script = 'server-bot\telegram-listener.mjs'; Extra = $null
        Trigger = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Minutes 1) -RepetitionDuration $forever },
     # ➤ The first scan waits half an hour, so it cannot talk over the setup.
-    @{ Name = 'Argus scan'; Script = 'server-bot\scan.mjs'; Extra = $null
+    @{ Name = 'Indubot scan'; Script = 'server-bot\scan.mjs'; Extra = $null
        Trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(30) -RepetitionInterval (New-TimeSpan -Hours 2) -RepetitionDuration $forever },
-    @{ Name = 'Argus links'; Script = 'server-bot\housekeep.mjs'; Extra = '--liveness-only'
+    @{ Name = 'Indubot links'; Script = 'server-bot\housekeep.mjs'; Extra = '--liveness-only'
        Trigger = New-ScheduledTaskTrigger -Daily -At '07:30' },
-    @{ Name = 'Argus cleanup'; Script = 'server-bot\housekeep.mjs'; Extra = $null
+    @{ Name = 'Indubot cleanup'; Script = 'server-bot\housekeep.mjs'; Extra = $null
        Trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Sunday -At '09:00' }
 )
 $created = 0
@@ -168,8 +194,8 @@ foreach ($j in $jobs) {
     }
 }
 # ➤ TRUST NOTHING: the listener is checked back and kicked once right now.
-if (Get-ScheduledTask -TaskName 'Argus listener' -ErrorAction SilentlyContinue) {
-    try { Start-ScheduledTask -TaskName 'Argus listener' } catch { }
+if (Get-ScheduledTask -TaskName 'Indubot listener' -ErrorAction SilentlyContinue) {
+    try { Start-ScheduledTask -TaskName 'Indubot listener' } catch { }
     Ok "$created scheduled tasks in place; the listener is running (hidden - no windows)"
 } else {
     Warn "THE LISTENER TASK DOES NOT EXIST - the bot cannot answer any Telegram"
@@ -178,20 +204,20 @@ if (Get-ScheduledTask -TaskName 'Argus listener' -ErrorAction SilentlyContinue) 
 
 # -- 3b. A real entry in Settings > Installed apps ----------------------------
 # ➤ Uninstalling must not require knowing that setup\uninstall-windows.bat
-# ➤ exists: the standard per-user Uninstall key puts Argus in Settings >
+# ➤ exists: the standard per-user Uninstall key puts Indubot in Settings >
 # ➤ Installed apps with a working Uninstall button, like any other program.
 # ➤ HKCU, so no administrator is involved - the same way every per-user
 # ➤ installer (VS Code, Chrome) registers itself. Refreshed on every run.
 try {
-    $reg = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Argus'
+    $reg = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Indubot'
     $ver = '1.0.0'
     try { $ver = (Get-Content (Join-Path $root 'package.json') -Raw | ConvertFrom-Json).version } catch { }
     New-Item -Path $reg -Force | Out-Null
-    Set-ItemProperty -Path $reg -Name DisplayName -Value 'Argus'
+    Set-ItemProperty -Path $reg -Name DisplayName -Value 'Indubot'
     Set-ItemProperty -Path $reg -Name DisplayVersion -Value "$ver"
-    Set-ItemProperty -Path $reg -Name Publisher -Value 'JustJans (github.com/JustJans/argus)'
+    Set-ItemProperty -Path $reg -Name Publisher -Value 'JustJans (github.com/JustJans/indubot)'
     Set-ItemProperty -Path $reg -Name InstallLocation -Value $root
-    Set-ItemProperty -Path $reg -Name DisplayIcon -Value $argusExe
+    Set-ItemProperty -Path $reg -Name DisplayIcon -Value $indubotExe
     Set-ItemProperty -Path $reg -Name UninstallString -Value "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$(Join-Path $root 'setup\uninstall-windows.ps1')`""
     Set-ItemProperty -Path $reg -Name NoModify -Value 1 -Type DWord
     Set-ItemProperty -Path $reg -Name NoRepair -Value 1 -Type DWord
@@ -200,7 +226,7 @@ try {
         $kb = [int]((Get-ChildItem $root -Recurse -File -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum / 1KB)
         Set-ItemProperty -Path $reg -Name EstimatedSize -Value $kb -Type DWord
     } catch { }
-    Ok "Argus is listed in Settings > Installed apps (the Uninstall button works)"
+    Ok "Indubot is listed in Settings > Installed apps (the Uninstall button works)"
 } catch { Warn "could not register in Installed apps: $($_.Exception.Message)" }
 
 # -- 4. The bot token, the ONE thing typed by hand ----------------------------

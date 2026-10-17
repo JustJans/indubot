@@ -1,4 +1,4 @@
-// ➤ The single place from which Argus calls Codex, OpenAI's CLI — the twin of
+// ➤ The single place from which Indubot calls Codex, OpenAI's CLI — the twin of
 // ➤ claude-cli.mjs, so a user with a ChatGPT plan instead of a Claude one gets the letters
 // ➤ and the Council. Kept to the smallest surface the CLI documents for scripts: the
 // ➤ prompt goes in on stdin, the final answer comes out in a file (-o), the sandbox is
@@ -80,7 +80,7 @@ export function codexArgs({ out, cwd, model = null, effort = null, withOptional 
 // ➤ Runs codex headless and returns {ok, out, kind}, the same contract as runClaudeCli:
 // ➤ `ok:false` means NOTHING usable came back and `out` must not be treated as content.
 export function runCodexCli(prompt, { cwd, model = null, effort = null, timeoutMs = 6 * 60 * 1000, label = 'codex', bin = CODEX_BIN } = {}) {
-  const outFile = join(tmpdir(), `argus-codex-${process.pid}-${randomBytes(4).toString('hex')}.txt`);
+  const outFile = join(tmpdir(), `indubot-codex-${process.pid}-${randomBytes(4).toString('hex')}.txt`);
   const readAnswer = () => { try { return readFileSync(outFile, 'utf-8').trim(); } catch { return ''; } };
   const tidy = () => { try { unlinkSync(outFile); } catch { /* never written */ } };
   // ➤ On Windows the shim runs through the shell, so a path with a space needs its quotes.

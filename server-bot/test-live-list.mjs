@@ -11,7 +11,7 @@ import { harness as testKit } from './test-harness.mjs';
 const { ok, eq, done } = testKit('live-list');
 const check = (name, cond) => ok(cond, name);
 
-const p = join(tmpdir(), `argus-live-list-test-${process.pid}.json`);
+const p = join(tmpdir(), `indubot-live-list-test-${process.pid}.json`);
 
 // ➤ Saving and reading back returns the same ids.
 saveListIds([10, 20, 30], p);
@@ -26,7 +26,7 @@ writeFileSync(p, JSON.stringify({ message_ids: 'nope' }), 'utf-8');
 check('message_ids non-array → []', loadListIds(p).length === 0);
 
 // ➤ File that does not exist → empty list.
-check('nonexistent file → []', loadListIds(join(tmpdir(), `argus-nope-${process.pid}.json`)).length === 0);
+check('nonexistent file → []', loadListIds(join(tmpdir(), `indubot-nope-${process.pid}.json`)).length === 0);
 
 // ➤ Save an empty list and read back → empty.
 saveListIds([], p);
@@ -34,10 +34,10 @@ check('save empty → []', loadListIds(p).length === 0);
 
 // ➤ Seen-ids (used to mark offers as [NEW]): round-trip, and null when NEVER
 // ➤ set (first run, baseline) vs [] when explicitly empty.
-const sp = join(tmpdir(), `argus-seen-test-${process.pid}.json`);
+const sp = join(tmpdir(), `indubot-seen-test-${process.pid}.json`);
 saveSeenIds([1, 2, 3], sp);
 check('seen round-trip', JSON.stringify(loadSeenIds(sp)) === JSON.stringify([1, 2, 3]));
-check('seen never-set → null', loadSeenIds(join(tmpdir(), `argus-seen-none-${process.pid}.json`)) === null);
+check('seen never-set → null', loadSeenIds(join(tmpdir(), `indubot-seen-none-${process.pid}.json`)) === null);
 writeFileSync(sp, 'garbage', 'utf-8');
 check('seen corrupt → null', loadSeenIds(sp) === null);
 saveSeenIds([], sp);

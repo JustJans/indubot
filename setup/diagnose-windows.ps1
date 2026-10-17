@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# Argus - Windows diagnosis. Double-click diagnose-windows.bat to run this.
+# Indubot - Windows diagnosis. Double-click diagnose-windows.bat to run this.
 # Read-only except for one thing: it runs the listener once in the foreground,
 # so any crash that Task Scheduler swallows is printed HERE, on screen.
 # Born from a field install where the bot stayed mute after a clean-looking
@@ -11,7 +11,7 @@ function Say($msg)  { Write-Host ""; Write-Host $msg }
 function Ok($msg)   { Write-Host "  OK  $msg" }
 function Bad($msg)  { Write-Host "  !!  $msg" }
 
-Say "Argus diagnosis - $root"
+Say "Indubot diagnosis - $root"
 
 # -- 1. Node ------------------------------------------------------------------
 $node = Get-Command node -ErrorAction SilentlyContinue
@@ -22,9 +22,9 @@ else { Bad "Node is not on the PATH. Run setup\setup-windows.bat first."; Read-H
 # ➤ The listener is what answers Telegram at all; every silent-bot report so
 # ➤ far came down to this task not existing, not running, or pointing at a
 # ➤ different unzipped copy than the one the user is looking at.
-$t = Get-ScheduledTask -TaskName 'Argus listener' -ErrorAction SilentlyContinue
+$t = Get-ScheduledTask -TaskName 'Indubot listener' -ErrorAction SilentlyContinue
 if (-not $t) {
-    Bad "The 'Argus listener' task DOES NOT EXIST. The bot cannot answer anything."
+    Bad "The 'Indubot listener' task DOES NOT EXIST. The bot cannot answer anything."
     Bad "Fix: run the installer (or setup\setup-windows.bat) again - it repairs the tasks."
 } else {
     Ok "task exists - state: $($t.State)"
@@ -32,10 +32,10 @@ if (-not $t) {
     Write-Host "      runs: $($act.Execute) $($act.Arguments)"
     Write-Host "      from: $($act.WorkingDirectory)"
     if ($act.WorkingDirectory -ne $root) {
-        Bad "The task points at ANOTHER copy of Argus, not this folder."
+        Bad "The task points at ANOTHER copy of Indubot, not this folder."
         Bad "Fix: run setup\setup-windows.bat from THIS folder (it replaces the task)."
     }
-    $info = Get-ScheduledTaskInfo -TaskName 'Argus listener' -ErrorAction SilentlyContinue
+    $info = Get-ScheduledTaskInfo -TaskName 'Indubot listener' -ErrorAction SilentlyContinue
     if ($info) {
         Write-Host "      last run: $($info.LastRunTime)  result: $($info.LastTaskResult)"
         if ($info.LastTaskResult -eq 267011) { Bad "Result 267011 = the task has NEVER run yet." }
@@ -74,7 +74,7 @@ if (Test-Path $alive) {
     $age = [int]((Get-Date) - (Get-Item $alive).LastWriteTime).TotalSeconds
     if ($age -lt 120) { Ok "the always-on listener is alive (heartbeat ${age}s ago) - commands should answer in about a second" }
     else { Bad "the listener's heartbeat is old (${age}s). The minute schedule should revive it; if this line persists, section 2 above holds the reason." }
-} else { Write-Host "  --  no listener heartbeat yet (first start pending, or an older Argus version)" }
+} else { Write-Host "  --  no listener heartbeat yet (first start pending, or an older Indubot version)" }
 
 # -- 4b. The cover-letter browser ---------------------------------------------
 # ➤ Playwright downloads its browser separately from `npm install`, and an npm

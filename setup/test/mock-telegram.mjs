@@ -1,5 +1,5 @@
 // A tiny stand-in for the Telegram Bot API, enough to replay the whole setup
-// with no account and no phone. The bot points at it via ARGUS_TG_API; a
+// with no account and no phone. The bot points at it via INDUBOT_TG_API; a
 // driver script (drive-setup.mjs) plays the human. Pattern: telegram-test-api
 // (github.com/jehy/telegram-test-api) and the baseApiUrl override it uses.
 //
@@ -17,7 +17,7 @@ const pendingUpdates = []; // queue the bot drains via getUpdates
 const botMessages = [];    // everything the bot sent, for the driver to read
 const files = {};          // file_id → local path, for getFile/download
 
-const BOT_USER = { id: 42, is_bot: true, first_name: 'ArgusTestBot', username: 'argus_test_bot' };
+const BOT_USER = { id: 42, is_bot: true, first_name: 'IndubotTestBot', username: 'indubot_test_bot' };
 const CHAT = { id: 1234567, type: 'private', first_name: 'Tester' };
 
 function body(req) {
