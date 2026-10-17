@@ -83,7 +83,7 @@ const tick = () => {   // one --once pass, like one watchdog run (must terminate
       // ➤ ESCO points at the mock's 404 wall: instantly and deterministically
       // ➤ dead on every platform (a closed port can sit in firewall limbo on
       // ➤ Windows for the full timeout), so the setup exercises its fallback.
-      { cwd: WORK, env: { ...process.env, ARGUS_TG_API: BASE, ARGUS_ESCO_API: `${BASE}/esco-dead` }, timeout: 120000, stdio: 'pipe' });
+      { cwd: WORK, env: { ...process.env, INDUBOT_TG_API: BASE, INDUBOT_ESCO_API: `${BASE}/esco-dead` }, timeout: 120000, stdio: 'pipe' });
   } catch (e) { log('  (listener exited non-zero:', String(e.message).split('\n')[0], ')'); }
 };
 let cursor = 0;

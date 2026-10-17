@@ -1,7 +1,7 @@
 # Profile notes — hard rules for cover letters and matching
 
 <!--
-  This file is YOURS. Argus reads it (alongside cv.md) when writing cover
+  This file is YOURS. Indubot reads it (alongside cv.md) when writing cover
   letters, and it can inform how the Council judges offers. Put here the things
   that are NOT in your CV but matter: hard rules, things to never mention, tone.
   Replace the examples below with your own.

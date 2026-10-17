@@ -11,7 +11,7 @@
 // ➤ ═══════════════════════════════════════════════════════════════════════
 
 /**
- * housekeep.mjs — pipeline hygiene for argus (run weekly via cron).
+ * housekeep.mjs — pipeline hygiene for indubot (run weekly via cron).
  *
  * Over time the Pending list accumulates:
  *   - dead links (offers filled or withdrawn since they were scanned)
@@ -51,7 +51,7 @@ const ROOT = dirname(SCRIPT_DIR);
 const PIPELINE_PATH = join(ROOT, 'data', 'pipeline.md');
 const PORTALS_PATH = join(ROOT, 'portals.yml');
 
-// ➤ Loads Argus's "dead offer" detector (server-bot/liveness-core.mjs);
+// ➤ Loads Indubot's "dead offer" detector (server-bot/liveness-core.mjs);
 // ➤ if it's missing, it uses a minimal version (only 404/410 errors).
 let classifyLiveness;
 try {

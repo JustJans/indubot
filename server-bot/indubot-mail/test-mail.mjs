@@ -3,7 +3,7 @@
 // ➤ Tests for reading the inbox. Every fixture here is INVENTED: real mail
 // ➤ never goes into a test file, and a test that needs a live mailbox is a
 // ➤ test nobody can run.
-// ➤ RUN: node server-bot/argus-mail/test-mail.mjs   (part of `npm test`)
+// ➤ RUN: node server-bot/indubot-mail/test-mail.mjs   (part of `npm test`)
 // ➤ ═══════════════════════════════════════════════════════════════════════
 
 import { classifyMessage, looksAutomated } from './classify.mjs';

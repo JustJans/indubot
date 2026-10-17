@@ -9,10 +9,10 @@ import { dirname, join } from 'path';
 import { parseVerdict } from './judges.mjs';
 import { runAi, aiErrorMessage } from '../ai-cli.mjs';
 
-// ➤ Paths: this file lives in server-bot/argus-council/. From here:
-// ➤   SCRIPT_DIR  = .../server-bot/argus-council
+// ➤ Paths: this file lives in server-bot/indubot-council/. From here:
+// ➤   SCRIPT_DIR  = .../server-bot/indubot-council
 // ➤   SERVERBOT   = .../server-bot   (where claude-token.json is)
-// ➤   ROOT        = .../argus   (where the model can Read cv.md, etc.)
+// ➤   ROOT        = .../indubot   (where the model can Read cv.md, etc.)
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const SERVERBOT = dirname(SCRIPT_DIR);
 const ROOT = dirname(SERVERBOT);

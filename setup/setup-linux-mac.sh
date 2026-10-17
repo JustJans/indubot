@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-# Argus — guided setup for macOS and Linux. The one-line installer runs this;
+# Indubot — guided setup for macOS and Linux. The one-line installer runs this;
 # by hand: bash setup/setup-linux-mac.sh
 # THE CONTRACT: the user types the bot token and taps START in Telegram, and
 # nothing else. Running the installer IS the consent, so nothing here asks
@@ -20,9 +20,9 @@ warn() { printf '  !   %s\n' "$*"; }
 
 # ➤ The Telegram host, overridable for testing only (setup/test replays the
 # ➤ whole install against a local mock). Default is the real one.
-TG_API="${ARGUS_TG_API:-https://api.telegram.org}"
+TG_API="${INDUBOT_TG_API:-https://api.telegram.org}"
 
-say "Argus setup"
+say "Indubot setup"
 
 # ── 0. Where the folder lives (macOS privacy) ────────────────────────────
 # ➤ macOS fences Desktop, Documents and Downloads behind per-app privacy
@@ -34,7 +34,7 @@ if [ "$(uname -s 2>/dev/null)" = "Darwin" ]; then
       warn "This folder is inside Desktop/Documents/Downloads, which macOS keeps"
       warn "off-limits to scheduled jobs. Move it somewhere plain and rerun:"
       echo
-      echo "  mv \"$ROOT\" \"\$HOME/argus\" && cd \"\$HOME/argus\" && bash setup/setup-linux-mac.sh"
+      echo "  mv \"$ROOT\" \"\$HOME/indubot\" && cd \"\$HOME/indubot\" && bash setup/setup-linux-mac.sh"
       echo
       exit 1 ;;
   esac
@@ -42,7 +42,7 @@ fi
 
 # ➤ Characters cron cannot survive (audit 2026-08-08). The schedule below
 # ➤ single-quotes every path, which a quote in the path would break out of —
-# ➤ and cron reads a bare % as a newline mid-command. A path like "my argus"
+# ➤ and cron reads a bare % as a newline mid-command. A path like "my indubot"
 # ➤ used to produce a crontab whose lines failed every minute for ever while
 # ➤ this setup still printed "schedule installed".
 case "$ROOT" in
@@ -50,7 +50,7 @@ case "$ROOT" in
     warn "This folder's path contains a quote (') or a percent sign (%), which the"
     warn "cron schedule cannot carry. Move the folder to a plainer path and rerun:"
     echo
-    echo "  mv \"$ROOT\" \"\$HOME/argus\" && cd \"\$HOME/argus\" && bash setup/setup-linux-mac.sh"
+    echo "  mv \"$ROOT\" \"\$HOME/indubot\" && cd \"\$HOME/indubot\" && bash setup/setup-linux-mac.sh"
     echo
     exit 1 ;;
 esac
@@ -84,7 +84,7 @@ case "$NODE_SAYS" in
     fi
     case "$NODE_SAYS" in
       (*dyld*|*"Library not loaded"*|*"image not found"*)
-        warn "This is a broken Node, not an Argus problem: a library it was built"
+        warn "This is a broken Node, not an Indubot problem: a library it was built"
         warn "against was replaced underneath it, which Homebrew does on upgrade."
         warn "Reinstall Node and run this again:"
         echo
@@ -97,7 +97,7 @@ case "$NODE_SAYS" in
 esac
 NODE_MAJOR="${NODE_SAYS%%.*}"
 if [ "$NODE_MAJOR" -lt 20 ]; then
-  warn "Node v$NODE_SAYS is too old. Argus needs 20 or newer (playwright, which prints the cover letters, requires it)."
+  warn "Node v$NODE_SAYS is too old. Indubot needs 20 or newer (playwright, which prints the cover letters, requires it)."
   exit 1
 fi
 ok "Node v$NODE_SAYS"
@@ -121,7 +121,7 @@ ok "dependencies installed"
 # ── 3. The schedule, installed without asking ────────────────────────────
 # ➤ The listener line is what answers Telegram at all, so it exists BEFORE the
 # ➤ token step: the moment the token is saved, the bot is already listening.
-# ➤ THIS INSTALLER OWNS THE SCHEDULE (field case 2026-08-06): every Argus line
+# ➤ THIS INSTALLER OWNS THE SCHEDULE (field case 2026-08-06): every Indubot line
 # ➤ is removed first, whichever folder it points at — reinstalls used to leave
 # ➤ several listeners alive, and each one answered, so the user saw the same
 # ➤ questions arrive in duplicate and triplicate.
@@ -131,7 +131,7 @@ ok "dependencies installed"
 # ➤ to the live listener via its listener-alive.json heartbeat.
 say "Scheduling"
 if command -v crontab >/dev/null 2>&1; then
-  CRON_TMP="$(mktemp 2>/dev/null || echo "/tmp/argus-cron.$$")"
+  CRON_TMP="$(mktemp 2>/dev/null || echo "/tmp/indubot-cron.$$")"
   crontab -l 2>/dev/null | while IFS= read -r line; do
     case "$line" in
       (*"server-bot/telegram-listener.mjs"*|*"server-bot/scan.mjs"*|*"server-bot/housekeep.mjs"*) continue ;;
@@ -141,11 +141,11 @@ if command -v crontab >/dev/null 2>&1; then
   FLOCK_L=""
   FLOCK_S=""
   if command -v flock >/dev/null 2>&1; then
-    FLOCK_L="$(command -v flock) -n /tmp/argus-listener.lock "
-    FLOCK_S="$(command -v flock) -n /tmp/argus-scan.lock "
+    FLOCK_L="$(command -v flock) -n /tmp/indubot-listener.lock "
+    FLOCK_S="$(command -v flock) -n /tmp/indubot-scan.lock "
   fi
   # ➤ Paths SINGLE-QUOTED (audit 2026-08-08): unquoted, a folder with a space
-  # ➤ produced "cd /home/u/my && argus/..." — four cron lines failing every
+  # ➤ produced "cd /home/u/my && indubot/..." — four cron lines failing every
   # ➤ run for ever, with the diagnosis greping for the broken line and
   # ➤ reporting OK. Quotes and % in the path are refused at the top.
   NODE_BIN="$(command -v node)"
@@ -155,7 +155,7 @@ if command -v crontab >/dev/null 2>&1; then
     echo "0 */2 * * * cd '$ROOT' && ${FLOCK_S}'$NODE_BIN' server-bot/scan.mjs >> '$ROOT/server-bot/scan.log' 2>&1"
     echo "30 7 * * * cd '$ROOT' && '$NODE_BIN' server-bot/housekeep.mjs --liveness-only >> '$ROOT/server-bot/scan.log' 2>&1"
     echo "0 9 * * 0 cd '$ROOT' && '$NODE_BIN' server-bot/housekeep.mjs >> '$ROOT/server-bot/scan.log' 2>&1"
-  } | crontab - && ok "schedule installed (this copy is now the only Argus scheduled)"
+  } | crontab - && ok "schedule installed (this copy is now the only Indubot scheduled)"
   rm -f "$CRON_TMP"
   # ➤ TRUST NOTHING: the listener starts right now, so the bot answers within
   # ➤ seconds instead of within a minute. This IS the always-on listener; the
@@ -183,7 +183,7 @@ else
     BOTUSER="$(printf '%s' "$ME" | sed -n 's/.*"username":"\([^"]*\)".*/\1/p')"
     if [ -n "$BOTUSER" ]; then
       CODE="$(LC_ALL=C tr -dc 'a-z0-9' < /dev/urandom 2>/dev/null | head -c 8)"
-      [ -n "$CODE" ] || CODE="argus$$"
+      [ -n "$CODE" ] || CODE="indubot$$"
       printf '{"bot_token": "%s", "chat_id": "", "link_code": "%s"}\n' "$OLDTOKEN" "$CODE" > "$CFG"
       ok "found the token from an earlier run — your bot is @$BOTUSER"
     fi
@@ -215,7 +215,7 @@ else
     # ➤ (Start-token idea: Advanced Web Machinery, advancedweb.hu, "The easiest
     # ➤ way to set up a chat with your Telegram bot".)
     CODE="$(LC_ALL=C tr -dc 'a-z0-9' < /dev/urandom 2>/dev/null | head -c 8)"
-    [ -n "$CODE" ] || CODE="argus$$"
+    [ -n "$CODE" ] || CODE="indubot$$"
     printf '{"bot_token": "%s", "chat_id": "", "link_code": "%s"}\n' "$TOKEN" "$CODE" > "$CFG"
     chmod 600 "$CFG" 2>/dev/null || true
     ok "token saved — your bot is @$BOTUSER"

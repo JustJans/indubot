@@ -21,7 +21,7 @@ const { ok, eq, done } = harness('veto');
 
 // ── The store: tolerant on the way in, atomic on the way out ───────────────
 {
-  const dir = mkdtempSync(join(tmpdir(), 'argus-vetoes-'));
+  const dir = mkdtempSync(join(tmpdir(), 'indubot-vetoes-'));
   const p = join(dir, 'vetoes.json');
   eq(loadVetoes(p), { titles: [], companies: [], cities: [] }, 'a missing store is empty, not a crash');
   writeFileSync(p, '{corrupt');

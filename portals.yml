@@ -1527,12 +1527,12 @@ tracked_companies:
 
 # ➤ ── SECTION 10: THE COUNCIL — SHADOW, OFF ────────────
 # ➤ WHAT IT IS: a layer ON TOP OF the funnel. Three AI judges (The Good defender,
-# ➤ The Bad prosecutor, The Ugly realist) rethink IN PROSE what Argus decided
+# ➤ The Bad prosecutor, The Ugly realist) rethink IN PROSE what Indubot decided
 # ➤ and record their verdict (2 of 3) in their own log data/judge-shadow.jsonl.
 # ➤ It runs in SHADOW: it decides NOTHING, it touches neither this list nor the pipeline. It serves
 # ➤ to MEASURE, at 2 weeks, whether it would improve the deterministic filter.
 # ➤ HOW TO TURN IT ON: set enabled: true. While it's false (or this
-# ➤ block is missing), the harness server-bot/argus-council/judge-shadow.mjs does nothing.
+# ➤ block is missing), the harness server-bot/indubot-council/judge-shadow.mjs does nothing.
 # ➤ PARAMETERS:
 # ➤   · model         → model for ALL judges (empty = each judge uses its
 # ➤                     own: The Good=haiku, The Bad/The Ugly=sonnet).

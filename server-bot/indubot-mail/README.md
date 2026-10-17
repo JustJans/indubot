@@ -1,10 +1,10 @@
-# argus-mail
+# indubot-mail
 
 Reads your inbox once a night, matches the replies to the applications you
 logged with `applied N`, and writes one state per application to
 `data/application-status.json`. The `mail` command in Telegram prints it.
 
-It is read-only, it never writes a word of your mail to disk, and Argus works
+It is read-only, it never writes a word of your mail to disk, and Indubot works
 without it — if you do not set it up, `mail` says so and nothing else changes.
 
 ## What it does
@@ -51,7 +51,7 @@ and "they never answered" is no reason to stop looking for jobs like that one.
 Run it by hand with `--dry-run` to see what it would write:
 
 ```bash
-node server-bot/argus-mail/listen.mjs --dry-run
+node server-bot/indubot-mail/listen.mjs --dry-run
 ```
 
 ## Setting up Gmail access
@@ -107,13 +107,13 @@ and both are covered by `.gitignore`.
 window it reads starts at your oldest logged application.
 
 ```
-0 0 * * * cd ~/argus && /usr/bin/flock -n /tmp/argus-mail.lock /usr/bin/node server-bot/argus-mail/listen.mjs >> server-bot/mail.log 2>&1
+0 0 * * * cd ~/indubot && /usr/bin/flock -n /tmp/indubot-mail.lock /usr/bin/node server-bot/indubot-mail/listen.mjs >> server-bot/mail.log 2>&1
 ```
 
 On Windows, the same thing as a scheduled task:
 
 ```
-schtasks /create /tn "argus-mail" /tr "node C:\path\to\argus\server-bot\argus-mail\listen.mjs" /sc daily /st 00:00
+schtasks /create /tn "indubot-mail" /tr "node C:\path\to\indubot\server-bot\indubot-mail\listen.mjs" /sc daily /st 00:00
 ```
 
 ## The scope, and why it is the only guarantee that matters

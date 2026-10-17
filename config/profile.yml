@@ -1,4 +1,4 @@
-# Argus profile configuration. Fill this in, or run the Telegram setup (/start).
+# Indubot profile configuration. Fill this in, or run the Telegram setup (/start).
 # The `search:` block below is a marine/offshore EXAMPLE — replace it with yours.
 
 candidate:
@@ -15,7 +15,7 @@ candidate:
   twitter: ""
 
 # ── SEARCH PROFILE (read by the engine: scan, requirements, judges) ──────────
-# This is what makes Argus YOUR job searcher. Edit here, or via the Telegram
+# This is what makes Indubot YOUR job searcher. Edit here, or via the Telegram
 # onboarding (/start) and `settings`. Terms are matched case-insensitively in
 # offer titles/bodies; the defaults below describe a marine/offshore engineer.
 # Advanced: a term may use regex (e.g. "\\bgis\\b"); plain words also work.

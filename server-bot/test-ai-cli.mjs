@@ -29,8 +29,8 @@ ok(/usage limit/.test(codexErrorMessage('limit', '')), 'the limit message says s
 
 // ── The command line: the documented core, plus the polish a version may drop ──
 {
-  const a = codexArgs({ out: '/tmp/o.txt', cwd: '/srv/argus', model: null, effort: 'low' });
-  eq(a.slice(0, 8), ['exec', '-', '-o', '/tmp/o.txt', '-s', 'read-only', '-C', '/srv/argus'], 'prompt on stdin, answer to a file, read-only, in the bot folder');
+  const a = codexArgs({ out: '/tmp/o.txt', cwd: '/srv/indubot', model: null, effort: 'low' });
+  eq(a.slice(0, 8), ['exec', '-', '-o', '/tmp/o.txt', '-s', 'read-only', '-C', '/srv/indubot'], 'prompt on stdin, answer to a file, read-only, in the bot folder');
   ok(a.includes('--skip-git-repo-check') && a.includes('--ephemeral'), 'the optional flags ride along by default');
   ok(a.includes('model_reasoning_effort=low') && !a.some(x => x.includes('"')), 'the effort goes unquoted — a value that is not TOML is taken literally');
   ok(!a.includes('-m'), 'no model is named unless asked: today\'s default name will not be tomorrow\'s');
@@ -46,7 +46,7 @@ eq(chooseBackend({ backend: 'auto', hasClaudeToken: false, hasCodexLogin: true }
 eq(chooseBackend({ backend: 'auto' }), 'claude', 'auto on a bare machine: Claude, so the error names both');
 eq(chooseBackend({}), 'claude', 'no settings at all reads as auto');
 {
-  const dir = join(tmpdir(), `argus-ai-cfg-${process.pid}`);
+  const dir = join(tmpdir(), `indubot-ai-cfg-${process.pid}`);
   rmSync(dir, { recursive: true, force: true }); mkdirSync(dir, { recursive: true });
   const p = join(dir, 'portals.yml');
   writeFileSync(p, 'ai:\n  backend: codex\n  codex_model: gpt-x\n');
@@ -60,7 +60,7 @@ eq(chooseBackend({}), 'claude', 'no settings at all reads as auto');
 }
 
 // ── The launcher against a stand-in codex ───────────────────────────────
-const dir = join(tmpdir(), `argus-fake-codex-${process.pid}`);
+const dir = join(tmpdir(), `indubot-fake-codex-${process.pid}`);
 rmSync(dir, { recursive: true, force: true });
 mkdirSync(dir, { recursive: true });
 const fakeJs = join(dir, 'fake-codex.js');

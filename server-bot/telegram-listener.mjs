@@ -11,7 +11,7 @@
 // ➤ ═══════════════════════════════════════════════════════════════════════
 
 /**
- * telegram-listener.mjs — Telegram as a remote control for argus.
+ * telegram-listener.mjs — Telegram as a remote control for indubot.
  *
  * Long-polls getUpdates in a loop: Telegram holds each request open up to
  * POLL_SECONDS and answers the instant something arrives, so a command or a
@@ -156,7 +156,7 @@ async function resyncOffset(cfg) {
 // ➤ seen) and collects everything it prints, to forward to you via Telegram.
 // ➤ process.execPath, not 'node': children run on the EXACT same runtime as this process —
 // ➤ immune to PATH surprises, and on Windows, where the schedule runs the bot as
-// ➤ argus.exe, every child shows up in Task Manager under the product's name instead of as
+// ➤ indubot.exe, every child shows up in Task Manager under the product's name instead of as
 // ➤ an anonymous node.exe.
 function runNode(script, args) {
   return new Promise(resolve => {
@@ -169,7 +169,7 @@ function runNode(script, args) {
 // ➤ commands (they stand out and copy with one tap); no user data goes in, so the raw tags
 // ➤ are safe.
 const HELP =
-  '<b>Argus — commands</b>\n' +
+  '<b>Indubot — commands</b>\n' +
   '<i>N = the number shown next to each offer, e.g. #675</i>\n' +
   '\n' +
   '<code>list</code> — show the pending offers\n' +
@@ -331,10 +331,10 @@ async function rejectWithReason(n, reason, { quiet = false } = {}) {
 function runScan() {
   return new Promise(resolve => {
     execFile(process.execPath, [join(SCRIPT_DIR, 'scan.mjs')],
-      // ➤ ARGUS_SKIP_LIST_REFRESH tells the scanner NOT to refresh the list; this listener
+      // ➤ INDUBOT_SKIP_LIST_REFRESH tells the scanner NOT to refresh the list; this listener
       // ➤ refreshes it at the end of forceScan(), so the list ends up BELOW the "Search
       // ➤ finished" message.
-      { cwd: ROOT, timeout: 10 * 60 * 1000, maxBuffer: 8 * 1024 * 1024, env: { ...process.env, ARGUS_SKIP_LIST_REFRESH: '1' } },
+      { cwd: ROOT, timeout: 10 * 60 * 1000, maxBuffer: 8 * 1024 * 1024, env: { ...process.env, INDUBOT_SKIP_LIST_REFRESH: '1' } },
       (err, stdout, stderr) => resolve((stdout || '') + (stderr || '')));
   });
 }
@@ -375,7 +375,7 @@ async function forceScan() {
     else await sendTelegram(`Search finished. ${n} new offer(s), sent.`);
   }
   // ➤ And NOW the list at the bottom, after the confirmation (the scanner was launched with
-  // ➤ ARGUS_SKIP_LIST_REFRESH), so the list stays the last message whether or not anything
+  // ➤ INDUBOT_SKIP_LIST_REFRESH), so the list stays the last message whether or not anything
   // ➤ new came up.
   await refreshList({ markSeen: true });
 }
@@ -387,7 +387,7 @@ const APPLIED_PATH = join(ROOT, 'data', 'applications.jsonl');
 // ➤ offer from pending for good — a position applied to must not be proposed again even if
 // ➤ reposted. "longshot": applying to something you KNOW you fall short of; still a sent
 // ➤ application (same file, same removal, same block on coming back) but flagged
-// ➤ longshot:true, because argus-council/reconcile.mjs treats applications.jsonl as ground
+// ➤ longshot:true, because indubot-council/reconcile.mjs treats applications.jsonl as ground
 // ➤ truth for SHOW and an application sent in hope would grade the Council on a false
 // ➤ positive.
 async function markApplied(n, { longshot = false, reason = '', quiet = false } = {}) {
@@ -502,17 +502,17 @@ async function undoCommand(t) {
 // ➤ last report is shown with its date. The nightly run keeps the report fresh unasked;
 // ➤ "status" still answers too, its first name.
 async function mailCommand() {
-  const { formatStatus } = await import('./argus-mail/report.mjs');
+  const { formatStatus } = await import('./indubot-mail/report.mjs');
   const workingId = await sendTelegramMessage('Reading your inbox — this takes a minute.', { silent: true });
   const refreshed = await new Promise(resolve => {
-    execFile(process.execPath, [join(SCRIPT_DIR, 'argus-mail', 'listen.mjs')],
+    execFile(process.execPath, [join(SCRIPT_DIR, 'indubot-mail', 'listen.mjs')],
       { cwd: ROOT, timeout: 5 * 60 * 1000, maxBuffer: 4 * 1024 * 1024 },
       (err) => resolve(!err));
   });
   const status = loadJson(join(ROOT, 'data', 'application-status.json'), null);
   if (workingId != null) await deleteTelegramMessage(workingId);
   if (!status) {
-    await sendTelegram('No status yet. Set Gmail up first (see server-bot/argus-mail/README.md); the report appears after the first read.');
+    await sendTelegram('No status yet. Set Gmail up first (see server-bot/indubot-mail/README.md); the report appears after the first read.');
     return;
   }
   const stale = refreshed ? '' : `\n\nThe inbox could not be read just now — this is the report from ${String(status.generated || '').slice(0, 10)}.`;
@@ -756,7 +756,7 @@ async function main({ pollSeconds = 0 } = {}) {
     // ➤ what to type. Only on a virgin install (setup never completed), so an established bot
     // ➤ that loses its offset file does not greet its owner like a stranger.
     if (ok && fresh && !existsSync(join(ROOT, 'data', 'onboarding-answers.json'))) {
-      await sendTelegram('Argus is listening now. Send /start to set up your profile.');
+      await sendTelegram('Indubot is listening now. Send /start to set up your profile.');
     }
     return 0;
   }

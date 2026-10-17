@@ -91,7 +91,7 @@ happened ("the title's only keyword from your field is part of its place name").
 still read the whole title, which is the conservative direction.
 
 ### The Council has no decision power
-`server-bot/argus-council/judge-shadow.mjs`. (`portals.yml` → `council.enabled` only
+`server-bot/indubot-council/judge-shadow.mjs`. (`portals.yml` → `council.enabled` only
 decides whether the judges RUN at all; it is not a switch for their authority.)
 
 Their verdict is computed and written to the journal, and nothing else reads it

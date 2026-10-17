@@ -5,7 +5,7 @@ was found, what it looked like before. The rule itself stays in the source as a
 short comment; the story is here, by module and function, in the order the code
 has them. Line numbers are where each note sat when it was moved (2026-09-01).
 
-## argus-council/judge-shadow.mjs
+## indubot-council/judge-shadow.mjs
 
 ### offerKey · line 54
 
@@ -83,7 +83,7 @@ the whole file under it, and an append landing between its read and
 its write was erased — the offer re-judged later, three paid AI calls
 repeated. Held for the one appendFileSync, nothing more.
 
-## argus-council/judges.mjs
+## indubot-council/judges.mjs
 
 ### profileBriefing · line 123
 
@@ -115,7 +115,7 @@ and the loose word "show" inside a HIDE reason won. Now we read the vote
 KEY even out of broken JSON, and if BOTH words appear with no key we
 admit we cannot tell instead of guessing.
 
-## argus-council/reconcile.mjs
+## indubot-council/reconcile.mjs
 
 ### main · line 100
 
@@ -133,7 +133,7 @@ SAFETY 2026-07-25 (audit): this rewrites the WHOLE journal from the lines
 it managed to parse, so any line it could not read was silently deleted.
 A journal is history: we refuse to shrink it.
 
-## argus-mail/classify.mjs
+## indubot-mail/classify.mjs
 
 ### (module level) · line 21
 
@@ -159,7 +159,7 @@ so the maybe is pinned to selected/shortlisted/successful, a few words
 apart, and to nothing else — "a match" and "the right fit" describe the
 OFFER suiting YOU, and binned real invitations.
 
-## argus-mail/listen.mjs
+## indubot-mail/listen.mjs
 
 ### windowFrom · line 34
 
@@ -207,7 +207,7 @@ GHOSTED HAS TO BE ON THIS LIST. It was missing, so the lines added up only
 while no application had yet passed the 60-day mark — and the first one to
 pass it would have gone missing from the summary without a word.
 
-## argus-mail/match.mjs
+## indubot-mail/match.mjs
 
 ### hasWord · line 55
 
@@ -242,7 +242,7 @@ the same employer on the same day, one failure notice. Reported as an
 unresolved tie, it told you nothing; the one thing you could act on
 was the thing that stayed silent.
 
-## argus-mail/report.mjs
+## indubot-mail/report.mjs
 
 ### (module level) · line 2
 
@@ -278,7 +278,7 @@ unassigned is the most expensive thing this whole module handles.
 With the numbers in front of you, "no N" settles a refusal and you
 know to go and read the mail yourself when it is an invitation.
 
-## argus-mail/status.mjs
+## indubot-mail/status.mjs
 
 ### mine · line 84
 
@@ -296,8 +296,8 @@ under "Never arrived", the loss this module calls its most expensive.
 
 ### (module level) · line 1
 
-WHAT IT IS: the single place from which Argus calls Claude on the server.
-WHY IT EXISTS: cover-letter.mjs and argus-council/engine.mjs each had their OWN
+WHAT IT IS: the single place from which Indubot calls Claude on the server.
+WHY IT EXISTS: cover-letter.mjs and indubot-council/engine.mjs each had their OWN
 copy of this, and the copies drifted — the Council one never learned to tell
 a "you ran out of credit" from a real answer.
 THE BUG IT FIXES (2026-07-25 audit, seen for real on 2026-07-24): when the
@@ -577,7 +577,7 @@ costs one line and the alternative is echoing attacker-shaped text.
 ### listMessageIds · line 110
 
 The ids of the messages matching a Gmail search query (the same syntax you
-type in Gmail's own search box, e.g. 'label:Argus newer_than:30d').
+type in Gmail's own search box, e.g. 'label:Indubot newer_than:30d').
 IT FOLLOWS THE PAGES (audit 2026-07-31). Gmail hands back at most 500 ids at
 a time plus a token for the next page, and that token used to be thrown
 away — so the search stopped dead after one page, without saying so. The
@@ -2071,7 +2071,7 @@ written to the report but never counted in the summary at the top.
 
 ### runVerdict · line 1707
 
-(audit 2026-07-31) Argus's normal failure is to find nothing, which looks
+(audit 2026-07-31) Indubot's normal failure is to find nothing, which looks
 exactly like a quiet week. Three different breakages produced a clean exit
 and total silence: no network (every source failed), a config that parses
 but selects no sources, and a config that lists sources none of which
@@ -2272,7 +2272,7 @@ Runs another of the bot's scripts (for example seen.mjs, the one that marks
 offers as seen) and collects everything it prints, to forward to you via Telegram.
 process.execPath, not 'node' (2026-08-12): children run on the EXACT same
 runtime as this process — immune to PATH surprises, and on Windows, where
-the schedule runs the bot as argus.exe, every child shows up in Task
+the schedule runs the bot as indubot.exe, every child shows up in Task
 Manager under the product's name instead of as an anonymous node.exe.
 scan.mjs already did it this way.
 

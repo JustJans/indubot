@@ -2,7 +2,7 @@
 
 <!--
   This is a placeholder. Replace it with your real CV (plain Markdown), or send
-  it during the Telegram setup (`/start`). Argus reads this file for your real
+  it during the Telegram setup (`/start`). Indubot reads this file for your real
   experience: the cover-letter writer and the judges take ALL personal facts
   from here, so keep it accurate and up to date.
 -->

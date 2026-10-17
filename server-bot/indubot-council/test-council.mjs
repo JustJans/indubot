@@ -4,7 +4,7 @@
 // ➤ vote reader (parseVerdict in several formats), the dropped-offer parsing, the
 // ➤ prompt assembly and the reconciliation with the user's real decision.
 // ➤ The AI call is MOCKed (Claude is never really called here).
-// ➤ WHEN IT RUNS: manually, "node server-bot/argus-council/test-council.mjs",
+// ➤ WHEN IT RUNS: manually, "node server-bot/indubot-council/test-council.mjs",
 // ➤ after touching any Council file. It prints how many passed and
 // ➤ exits with code 0 (all good) or 1 (something failed).
 // ➤ ═══════════════════════════════════════════════════════════════════════

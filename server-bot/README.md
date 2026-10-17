@@ -1,12 +1,11 @@
-# The engine — how Argus actually works
+# The engine — how Indubot actually works
 
 > Setup, installation and the command list live in the [main README](../README.md).
 > This file is the reference for the engine itself: what each program does, what
 > each file holds, and how to change things without breaking them.
 
-**Argus** is the bot's name — the hundred-eyed watchman of Greek myth, who
-never sleeps. The variant that adds the Council of judges (The Good, The Bad,
-The Ugly) is called **Argus Plus**.
+The variant that adds the Council of judges (The Good, The Bad, The Ugly) is
+called **Indubot Plus**.
 
 ## 1. The funnel
 
@@ -64,7 +63,7 @@ offer, with the reason.
 | `review.mjs` | The `review` mode: one card per offer, buttons, every decision undoable | On `review` |
 | `vetoes.mjs` | The veto panel a typed `no` earns, and the standing vetoes it keeps in `data/vetoes.json` | After a `no`, and by scan and housekeep |
 | `pipeline-format.mjs` | The two headings that divide `data/pipeline.md` | Used by everything that reads the list |
-| `argus-council/` | Three LLM judges reviewing offers in **shadow mode** — they vote, they decide nothing. [Its own README](argus-council/README.md) | Optional |
+| `indubot-council/` | Three LLM judges reviewing offers in **shadow mode** — they vote, they decide nothing. [Its own README](indubot-council/README.md) | Optional |
 | `esco.mjs` | The EU occupation taxonomy (free, no key): turns the CV's terms into real occupations, so the setup can suggest roles and degree areas | By the setup |
 
 ### Tests
@@ -80,8 +79,8 @@ offer, with the reason.
 | `test-robustness.mjs` | the parts that can LOSE DATA or answer wrongly |
 | `test-ai-cli.mjs` | which AI CLI is chosen, and the Codex launcher against a stand-in program |
 | `test-gmail.mjs` | the read-only inbox door |
-| `argus-council/test-council.mjs` | the judges, the vote reader and the blind state |
-| `argus-mail/test-mail.mjs` | replies → one state per application |
+| `indubot-council/test-council.mjs` | the judges, the vote reader and the blind state |
+| `indubot-mail/test-mail.mjs` | replies → one state per application |
 
 `npm test` runs every suite through `node --test`, in parallel, with one summary; any
 single file also runs on its own (`node server-bot/test-filter.mjs`). They all share

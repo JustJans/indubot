@@ -1,6 +1,6 @@
 # Example cover letter — THE canonical format to mimic
 
-This is an EXAMPLE of a good cover letter. When Argus generates a new one
+This is an EXAMPLE of a good cover letter. When Indubot generates a new one
 (`cover N`), it reads this file and imitates its structure, length (5 short
 paragraphs, 180–260 words) and tone. Rules this example embodies, always to
 respect:

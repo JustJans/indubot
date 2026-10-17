@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-# Argus — macOS/Linux diagnosis. Run it when the bot answers nothing:
+# Indubot — macOS/Linux diagnosis. Run it when the bot answers nothing:
 #   bash setup/diagnose-linux-mac.sh
 # Read-only except for one thing: it runs the listener once in the foreground,
 # so any crash that cron swallows is printed HERE, on screen. Twin of
@@ -14,7 +14,7 @@ ok()   { printf '  OK  %s\n' "$*"; }
 bad()  { printf '  !!  %s\n' "$*"; }
 say()  { printf '\n%s\n' "$*"; }
 
-say "Argus diagnosis — $ROOT"
+say "Indubot diagnosis — $ROOT"
 
 # ── 1. Node ──────────────────────────────────────────────────────────────
 if command -v node >/dev/null 2>&1; then ok "Node $(node -v) at $(command -v node)"
@@ -26,7 +26,7 @@ if [ "$(uname -s 2>/dev/null)" = "Darwin" ]; then
     "$HOME/Desktop"*|"$HOME/Documents"*|"$HOME/Downloads"*)
       bad "This folder is inside Desktop/Documents/Downloads: macOS blocks cron"
       bad "from reading here, so the schedule silently never runs. Fix:"
-      echo "      mv \"$ROOT\" \"\$HOME/argus\" && cd \"\$HOME/argus\" && bash setup/setup-linux-mac.sh" ;;
+      echo "      mv \"$ROOT\" \"\$HOME/indubot\" && cd \"\$HOME/indubot\" && bash setup/setup-linux-mac.sh" ;;
     *) ok "the folder is somewhere cron can read" ;;
   esac
 fi
@@ -87,7 +87,7 @@ if [ -f "$ALIVE" ]; then
     bad "the listener's heartbeat is old ($ALIVE). The minute schedule should revive it; if this line persists, the cron section above holds the reason."
   fi
 else
-  echo "  --  no listener heartbeat yet (first start pending, or an older Argus version)"
+  echo "  --  no listener heartbeat yet (first start pending, or an older Indubot version)"
 fi
 
 # ── 6. What cron saw (the log) ───────────────────────────────────────────
